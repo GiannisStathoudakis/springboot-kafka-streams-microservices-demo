@@ -19,7 +19,7 @@
 
 ## Overview
 
-<img src="docs/overview.drawio.svg" height="370px" alt="overview"/>
+<img src="docs/overview.drawio.svg" width="400" alt="overview"/>
 
 ### Business Logic Flow
 
