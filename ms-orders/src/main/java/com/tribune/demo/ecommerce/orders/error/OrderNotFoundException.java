@@ -1,6 +1,5 @@
 package com.tribune.demo.ecommerce.orders.error;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +10,7 @@ public class OrderNotFoundException extends RuntimeException {
     private final Object orderId;
 
     public OrderNotFoundException(Object orderId) {
-        this.orderId = orderId;
         super("Order not found with ID: " + orderId);
+        this.orderId = orderId; 
     }
 }
-
