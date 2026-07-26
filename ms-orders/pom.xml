@@ -10,7 +10,7 @@
     <artifactId>ms-orders</artifactId>
     <description>Orders Microservice (Orchestrator)</description>
     <properties>
-        <java.version>26</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
         <dependency>
