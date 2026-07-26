@@ -1,0 +1,25 @@
+{{- range .Values.microservices }}
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: {{ .name }}-db-credentials
+  namespace: {{ $.Release.Namespace }}
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: vault-db-backend
+    kind: ClusterSecretStore
+  target:
+    name: {{ .name }}-db-secret
+    creationPolicy: Owner
+  data:
+  - secretKey: MYSQL_PASSWORD
+    remoteRef:
+      key: database/creds/{{ .name }}-role 
+      property: password
+  - secretKey: MYSQL_USERNAME
+    remoteRef:
+      key: database/creds/{{ .name }}-role 
+      property: username
+{{- end }}

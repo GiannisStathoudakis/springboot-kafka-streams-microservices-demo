@@ -1,0 +1,49 @@
+{{- range .Values.microservices }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: {{ .name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      serviceAccountName: {{ .name }}-sa
+      securityContext:
+        runAsNonRoot: {{ $.Values.security.runAsNonRoot }}
+        runAsUser: {{ $.Values.security.runAsUser }}
+        runAsGroup: {{ $.Values.security.runAsGroup }}
+      containers:
+        - name: {{ .name }}
+          image: "{{ $.Values.image.registry }}/{{ .name }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .port }}
+          env:
+            # Redpanda connection
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: {{ $.Values.redpanda.bootstrapServers | quote }}
+            
+            # MySQL connection
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://{{ $.Values.mysql.host }}:{{ $.Values.mysql.port }}/{{ $.Values.mysql.databaseName }}?useSSL=false&allowPublicKeyRetrieval=true"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .name }}-db-secret
+                  key: MYSQL_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .name }}-db-secret
+                  key: MYSQL_PASSWORD
+{{- end }}

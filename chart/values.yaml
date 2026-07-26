@@ -1,0 +1,28 @@
+domain: ecommerce.lab.internal
+image:
+  registry: ghcr.io/giannisstathoudakis
+  tag: latest
+  pullPolicy: Always
+
+security:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 3000
+  readOnlyRootFilesystem: false
+
+mysql:
+  host: mysql.ecommerce.svc.cluster.local
+  port: 3306
+  databaseName: ecommerce
+
+redpanda:
+  bootstrapServers: "redpanda.redpanda.svc.cluster.local:9093"
+
+microservices:
+  - name: ms-orders
+    port: 9091
+    isApiGateway: true
+  - name: ms-payment
+    port: 8080
+  - name: ms-stock
+    port: 8080
