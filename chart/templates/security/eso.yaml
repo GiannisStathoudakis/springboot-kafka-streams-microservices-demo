@@ -13,13 +13,11 @@ spec:
   target:
     name: {{ .name }}-db-secret
     creationPolicy: Owner
-  data:
-  - secretKey: MYSQL_PASSWORD
-    remoteRef:
-      key: database/creds/{{ .name }}-role 
-      property: password
-  - secretKey: MYSQL_USERNAME
-    remoteRef:
-      key: database/creds/{{ .name }}-role 
-      property: username
+    template:
+      data:
+        MYSQL_USERNAME: '{{ "{{" }} .username {{ "}}" }}'
+        MYSQL_PASSWORD: '{{ "{{" }} .password {{ "}}" }}'
+  dataFrom:
+  - extract:
+      key: database/creds/{{ .name }}-role
 {{- end }}
