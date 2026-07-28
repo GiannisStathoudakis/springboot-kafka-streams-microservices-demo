@@ -46,4 +46,9 @@ spec:
                 secretKeyRef:
                   name: {{ .name }}-db-secret
                   key: MYSQL_PASSWORD
+            
+            - name: SPRING_TEMPORAL_CONNECTION_TARGET
+              value: "temporal-frontend.temporal.svc.cluster.local:7233"
+            - name: SPRING_TEMPORAL_NAMESPACE
+              value: "default"
 {{- end }}
