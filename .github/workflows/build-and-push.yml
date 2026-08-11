@@ -98,19 +98,8 @@ jobs:
       # -------------------------------------------------------------
       # POST-BUILD SCANS & SIGNING
       # -------------------------------------------------------------
-      - name: Cache Trivy Vulnerability Database
-        uses: actions/cache@v6
-        with:
-          path: .trivycache/
-          # This key ensures the cache refreshes once every 24 hours
-          key: ${{ runner.os }}-trivy-${{ github.run_id }}
-          restore-keys: |
-            ${{ runner.os }}-trivy-
-
       - name: Trivy Scanner
         uses: aquasecurity/trivy-action@v0.36.0
-        env:
-          TRIVY_CACHE_DIR: .trivycache/
         with:
           image-ref: ghcr.io/giannisstathoudakis/${{ matrix.service }}:${{ github.sha }}
           format: 'sarif'
