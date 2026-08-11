@@ -1,7 +1,6 @@
-domain: ecommerce.lab.internal
+domain: production.kublab.org
 image:
   registry: ghcr.io/giannisstathoudakis
-  tag: latest
   pullPolicy: Always
 
 security:
@@ -21,8 +20,13 @@ redpanda:
 microservices:
   - name: ms-orders
     port: 9091
-    isApiGateway: true
+    tag: latest
+    path: /orders
   - name: ms-payment
     port: 8080
+    tag: latest
+    path: /payment
   - name: ms-stock
     port: 8080
+    tag: latest
+    path: /stock

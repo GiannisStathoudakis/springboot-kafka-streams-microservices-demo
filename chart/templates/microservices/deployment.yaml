@@ -24,7 +24,7 @@ spec:
         runAsGroup: {{ $.Values.security.runAsGroup }}
       containers:
         - name: {{ .name }}
-          image: "{{ $.Values.image.registry }}/{{ .name }}:{{ $.Values.image.tag }}"
+          image: "{{ $.Values.image.registry }}/{{ .name }}:{{ .tag }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .port }}
