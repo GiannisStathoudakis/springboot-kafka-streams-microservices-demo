@@ -44,8 +44,13 @@ jobs:
       - name: Semgrep - SAST Scanner
         run: |
           python3 -m pip install semgrep
-          
-          semgrep scan --config auto --error ./${{ matrix.service }}
+          semgrep scan --config auto --sarif --output=semgrep.sarif ./${{ matrix.service }}
+
+      - name: Upload Semgrep SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: semgrep.sarif
 
       # -------------------------------------------------------------
       # BUILD STAGE
@@ -99,5 +104,4 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         run: |
-          # Signs the image and its associated SBOM
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/giannisstathoudakis/${{ matrix.service }}@${{ steps.build-push.outputs.digest }}
