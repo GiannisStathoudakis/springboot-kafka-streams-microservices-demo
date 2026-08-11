@@ -25,11 +25,31 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write # for Semgrep
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # for GitLeaks
 
+      # -------------------------------------------------------------
+      # PRE-BUILD SCANS
+      # -------------------------------------------------------------
+      - name: GitLeaks - Secret Scanner
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Semgrep - SAST Scanner
+        run: |
+          python3 -m pip install semgrep
+          
+          semgrep scan --config auto --error ./${{ matrix.service }}
+
+      # -------------------------------------------------------------
+      # BUILD STAGE
+      # -------------------------------------------------------------
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -47,9 +67,37 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v4.1.2
+
       - name: Build and Push Docker Image
+        id: build-push
         uses: docker/build-push-action@v7
         with:
           context: ./${{ matrix.service }}
           push: true
-          tags: ghcr.io/giannisstathoudakis/${{ matrix.service }}:latest
+          sbom: true 
+          provenance: true
+          tags: |
+            ghcr.io/giannisstathoudakis/${{ matrix.service }}:${{ github.sha }}
+
+      # -------------------------------------------------------------
+      # POST-BUILD SCANS & SIGNING
+      # -------------------------------------------------------------
+      - name: Trivy Scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ghcr.io/giannisstathoudakis/${{ matrix.service }}:${{ github.sha }}
+          format: 'table'
+          exit-code: '1' 
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Sign the published Docker image
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        run: |
+          # Signs the image and its associated SBOM
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ghcr.io/giannisstathoudakis/${{ matrix.service }}@${{ steps.build-push.outputs.digest }}
