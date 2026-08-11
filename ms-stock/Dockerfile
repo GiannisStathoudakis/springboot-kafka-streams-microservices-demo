@@ -1,4 +1,5 @@
 FROM eclipse-temurin:17-jre-alpine
+RUN apk update && apk upgrade --no-cache
 WORKDIR /opt
 EXPOSE 8080
 COPY target/*.jar /opt/app.jar
