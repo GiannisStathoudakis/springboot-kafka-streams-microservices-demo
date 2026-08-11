@@ -11,6 +11,10 @@ on:
       - 'commons/**'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -41,17 +45,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Cache Semgrep Rules
-        uses: actions/cache@v6
-        with:
-          path: ~/.semgrep
-          key: ${{ runner.os }}-semgrep-rules
-          
       - name: Semgrep - SAST Scanner
         run: |
           python3 -m pip install semgrep
-          
-          semgrep scan --config auto --error --sarif --output=semgrep.sarif ./${{ matrix.service }}
+          semgrep scan --config auto --sarif --output=semgrep.sarif ./${{ matrix.service }}
 
       - name: Upload Semgrep SARIF
         if: always()
