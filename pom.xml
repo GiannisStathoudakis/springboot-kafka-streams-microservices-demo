@@ -11,10 +11,6 @@
     <description>
         An E-commerce Microservices Application that demonstrates the usage of Kafka Streams.
     </description>
-    <properties>
-        <jackson-bom.version>2.21.4</jackson-bom.version>
-        <micrometer.version>1.16.6</micrometer.version>
-    </properties>
 
     <developers>
         <developer>
