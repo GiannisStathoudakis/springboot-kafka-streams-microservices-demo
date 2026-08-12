@@ -18,15 +18,18 @@ redpanda:
   bootstrapServers: "redpanda.redpanda.svc.cluster.local:9093"
 
 microservices:
-  - name: ms-orders
+  orders:
+    name: ms-orders
     port: 9091
     tag: latest
     path: /orders
-  - name: ms-payment
+  payment:
+    name: ms-payment
     port: 8080
     tag: latest
     path: /payment
-  - name: ms-stock
+  stock:
+    name: ms-stock
     port: 8080
     tag: latest
     path: /stock
