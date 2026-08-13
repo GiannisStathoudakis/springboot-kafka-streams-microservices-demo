@@ -21,15 +21,15 @@ microservices:
   orders:
     name: ms-orders
     port: 9091
-    tag: 7e2d8f89b1e1ab60ecb6bf31fbac36e64c3f9058
+    tag: latest
     path: /orders
   payment:
     name: ms-payment
     port: 8080
-    tag: 7e2d8f89b1e1ab60ecb6bf31fbac36e64c3f9058
+    tag: latest
     path: /payment
   stock:
     name: ms-stock
     port: 8080
-    tag: 7e2d8f89b1e1ab60ecb6bf31fbac36e64c3f9058
+    tag: latest
     path: /stock
