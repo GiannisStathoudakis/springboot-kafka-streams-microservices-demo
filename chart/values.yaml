@@ -10,7 +10,7 @@ security:
   readOnlyRootFilesystem: false
 
 mysql:
-  host: mysql.ecommerce.svc.cluster.local
+  host: mysql.mysql.svc.cluster.local
   port: 3306
   databaseName: ecommerce
 
