@@ -79,9 +79,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v4.1.2
-
       - name: Build Docker Image
         uses: docker/build-push-action@v7
         with:
@@ -93,7 +90,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       # -------------------------------------------------------------
-      # POST-BUILD SCANS & SIGNING
+      # POST-BUILD SCANS & PUSH
       # -------------------------------------------------------------
       - name: Trivy Scanner
         uses: aquasecurity/trivy-action@v0.36.0
@@ -122,10 +119,3 @@ jobs:
           provenance: true
           tags: ghcr.io/giannisstathoudakis/${{ matrix.service }}:${{ github.sha }}
           cache-from: type=gha
-
-      - name: Sign the published Docker image
-        env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-        run: |
-          cosign sign --yes --tlog-upload=false --key env://COSIGN_PRIVATE_KEY ghcr.io/giannisstathoudakis/${{ matrix.service }}@${{ steps.build-push.outputs.digest }}
