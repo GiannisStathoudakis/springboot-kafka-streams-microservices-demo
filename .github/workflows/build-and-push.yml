@@ -47,8 +47,7 @@ jobs:
           
       - name: Semgrep - SAST Scanner
         run: |
-          python3 -m pip install semgrep
-          semgrep scan --config auto --sarif --output=semgrep.sarif ./${{ matrix.service }}
+          docker run --rm -v "${PWD}:/src" -w "/src" semgrep/semgrep semgrep scan --config auto --sarif --output=semgrep.sarif ./${{ matrix.service }}
 
       - name: Upload Semgrep SARIF
         if: always()
@@ -66,6 +65,8 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      # NOTE: Tests are skipped here to accelerate local lab deployments.
+      # In a production CI/CD pipeline, -DskipTests MUST be removed to enforce quality gates.
       - name: Build with Maven
         run: mvn clean package -pl ${{ matrix.service }} -am -DskipTests
 
@@ -92,6 +93,9 @@ jobs:
       # -------------------------------------------------------------
       # POST-BUILD SCANS & PUSH
       # -------------------------------------------------------------
+      # NOTE FOR PRODUCTION: In a real enterprise environment, exit-code MUST be set to '1' 
+      # to strictly block deployments of vulnerable images. It is set to '0' here ONLY 
+      # because this is a 3rd-party demo codebase used for infrastructure testing.
       - name: Trivy Scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
