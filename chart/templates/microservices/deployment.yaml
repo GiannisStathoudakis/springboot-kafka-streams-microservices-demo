@@ -46,9 +46,27 @@ spec:
                 secretKeyRef:
                   name: {{ .name }}-db-secret
                   key: MYSQL_PASSWORD
-            
-            - name: SPRING_TEMPORAL_CONNECTION_TARGET
-              value: "temporal-frontend.temporal.svc.cluster.local:7233"
-            - name: SPRING_TEMPORAL_NAMESPACE
-              value: "default"
+
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: {{ .port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: {{ .port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
 {{- end }}
