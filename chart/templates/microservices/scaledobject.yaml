@@ -1,0 +1,33 @@
+{{- range .Values.microservices }}
+{{- if (dig "autoscaling" "enabled" false .) }}
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ .name }}-autoscaler
+  namespace: {{ $.Release.Namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .name }}
+  minReplicaCount: {{ .autoscaling.minReplicas | default 1 }}
+  maxReplicaCount: {{ .autoscaling.maxReplicas | default 5 }}
+  pollingInterval: 15
+  cooldownPeriod: 60
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: {{ $.Values.autoscalingDefaults.serverAddress }}
+      customHeaders: "X-Scope-OrgID={{ $.Values.autoscalingDefaults.tenant }}"
+      query: sum(rate(container_cpu_usage_seconds_total{namespace="{{ $.Release.Namespace }}", pod=~"{{ .name }}-.*", container="{{ .name }}"}[2m])) * 1000
+      threshold: "{{ div (mul .resources.limits.cpuMilli .autoscaling.targetPercentage) 100 }}"
+      
+  - type: prometheus
+    metadata:
+      serverAddress: {{ $.Values.autoscalingDefaults.serverAddress }}
+      customHeaders: "X-Scope-OrgID={{ $.Values.autoscalingDefaults.tenant }}"
+      query: sum(container_memory_working_set_bytes{namespace="{{ $.Release.Namespace }}", pod=~"{{ .name }}-.*", container="{{ .name }}"})
+      threshold: "{{ div (mul (mul .resources.limits.memoryMb 1048576) .autoscaling.targetPercentage) 100 }}"
+{{- end }}
+{{- end }}

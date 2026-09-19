@@ -17,19 +17,61 @@ mysql:
 redpanda:
   bootstrapServers: "redpanda.redpanda.svc.cluster.local:9093"
 
+autoscalingDefaults:
+  serverAddress: http://mimir-query-frontend.mimir.svc.cluster.local:8080/prometheus
+  tenant: app
+
 microservices:
   orders:
     name: ms-orders
-    port: 9091
-    tag: 88fc332d39aae80bdc7d766bd36ef4cf0c39bb8e
+    port: 8080
+    tag: "initial-tag"
     path: /orders
+    resources:
+      requests:
+        cpuMilli: 100
+        memoryMb: 256
+      limits:
+        cpuMilli: 500
+        memoryMb: 512 
+    autoscaling:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 5
+      targetPercentage: 75
+
   payment:
     name: ms-payment
     port: 8080
-    tag: 88fc332d39aae80bdc7d766bd36ef4cf0c39bb8e
+    tag: "initial-tag"
     path: /payment
+    resources:
+      requests:
+        cpuMilli: 100
+        memoryMb: 256
+      limits:
+        cpuMilli: 500
+        memoryMb: 512
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetPercentage: 75
+
   stock:
     name: ms-stock
     port: 8080
-    tag: 88fc332d39aae80bdc7d766bd36ef4cf0c39bb8e
+    tag: "initial-tag"
     path: /stock
+    resources:
+      requests:
+        cpuMilli: 100
+        memoryMb: 256
+      limits:
+        cpuMilli: 500
+        memoryMb: 512
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      targetPercentage: 75
