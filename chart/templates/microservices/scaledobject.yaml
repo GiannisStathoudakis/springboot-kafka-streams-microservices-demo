@@ -16,6 +16,7 @@ spec:
   pollingInterval: 15
   cooldownPeriod: 300 # Wait 5 minutes of low load before initiating scale-down
   
+  # Advanced behavior to prevent thrashing/flapping during scale-down
   advanced:
     horizontalPodAutoscalerConfig:
       behavior:
@@ -38,14 +39,14 @@ spec:
       threshold: "{{ div (mul .resources.limits.cpuMilli .autoscaling.targetPercentage) 100 }}"
 
   # ===================================================================
-  # 2. RED Metrics Trigger (Request Rate via eBPF / Beyla & Mimir)
+  # 2. Latency (P95 Duration) Trigger (Request Rate via eBPF / Beyla & Mimir)
   # ===================================================================
   - type: prometheus
     metadata:
       serverAddress: {{ $.Values.autoscalingDefaults.serverAddress }}
       customHeaders: "X-Scope-OrgID={{ $.Values.autoscalingDefaults.tenant }}"
-      # Measures the HTTP request rate per second for this specific microservice pod
-      query: sum(rate(http_server_duration_milliseconds_count{namespace="{{ $.Release.Namespace }}", service_name="{{ .name }}"}[2m]))
-      threshold: '10' # Scale-out immediately if average requests/sec per pod exceeds this limit
+      # Measures the 90th percentile (P90) latency in milliseconds for requests
+      query: histogram_quantile(0.90, sum(rate(http_server_duration_milliseconds_bucket{namespace="{{ $.Release.Namespace }}", service_name="{{ .name }}"}[2m])) by (le))
+      threshold: '500' # Scale out immediately if P90 latency exceeds 500ms per pod
 {{- end }}
 {{- end }}
