@@ -46,6 +46,9 @@ spec:
                 secretKeyRef:
                   name: {{ .name }}-db-secret
                   key: MYSQL_PASSWORD
+            # Dynamic JVM Memory Management
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms{{ div .resources.requests.memoryMb 2 }}m -Xmx{{ div .resources.limits.memoryMb 2 }}m"
 
           livenessProbe:
             httpGet:
