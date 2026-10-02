@@ -29,17 +29,7 @@ spec:
 
   triggers:
   # ===================================================================
-  # 1. CPU Baseline Trigger
-  # ===================================================================
-  - type: prometheus
-    metadata:
-      serverAddress: {{ $.Values.autoscalingDefaults.serverAddress }}
-      customHeaders: "X-Scope-OrgID={{ $.Values.autoscalingDefaults.tenant }}"
-      query: sum(rate(container_cpu_usage_seconds_total{namespace="{{ $.Release.Namespace }}", pod=~"{{ .name }}-.*", container="{{ .name }}"}[2m])) * 1000
-      threshold: "{{ div (mul .resources.limits.cpuMilli .autoscaling.targetPercentage) 100 }}"
-
-  # ===================================================================
-  # 2. Latency (P95 Duration) Trigger (Request Rate via eBPF / Beyla & Mimir)
+  # Latency (P90 Duration) Trigger (Request Rate via eBPF / Beyla & Mimir)
   # ===================================================================
   - type: prometheus
     metadata:
