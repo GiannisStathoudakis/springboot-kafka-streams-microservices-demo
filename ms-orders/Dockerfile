@@ -1,8 +1,5 @@
-FROM eclipse-temurin:17-jre-alpine
-RUN apk update && apk upgrade --no-cache
-WORKDIR /opt
+FROM gcr.io/distroless/java17-debian12:nonroot
+WORKDIR /app
+COPY target/*.jar ./app.jar
 EXPOSE 9091
-COPY target/*.jar /opt/app.jar
-RUN addgroup -S javauser && adduser -S javauser -G javauser && chown -R javauser:javauser /opt
-USER javauser
-ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
