@@ -71,11 +71,18 @@ spec:
               value: "service.name={{ .name }},k8s.namespace.name={{ $.Release.Namespace }},k8s.cluster.name=my-prod-cluster"
 
           {{- if default true .isWebApi }}
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: {{ .port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 15  
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: {{ .port }}
-            initialDelaySeconds: 60
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 3
@@ -83,9 +90,8 @@ spec:
             httpGet:
               path: /actuator/health/readiness
               port: {{ .port }}
-            initialDelaySeconds: 60
-            timeoutSeconds: 5
             periodSeconds: 15
+            timeoutSeconds: 5
             failureThreshold: 3
           {{- end }}
 
