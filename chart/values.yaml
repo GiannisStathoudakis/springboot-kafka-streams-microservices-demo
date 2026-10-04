@@ -25,6 +25,7 @@ microservices:
   orders:
     name: ms-orders
     port: 9091
+    isWebApi: true
     tag: b4c36e15ae2b7af17e3acf9646d8b784f480ed40
     path: /orders
     resources:
@@ -43,8 +44,9 @@ microservices:
   payment:
     name: ms-payment
     port: 8080
+    isWebApi: false
     tag: b4c36e15ae2b7af17e3acf9646d8b784f480ed40
-    path: /payment
+    #path: /payment
     resources:
       requests:
         cpuMilli: 100
@@ -61,8 +63,9 @@ microservices:
   stock:
     name: ms-stock
     port: 8080
+    isWebApi: false
     tag: b4c36e15ae2b7af17e3acf9646d8b784f480ed40
-    path: /stock
+    #path: /stock
     resources:
       requests:
         cpuMilli: 100
