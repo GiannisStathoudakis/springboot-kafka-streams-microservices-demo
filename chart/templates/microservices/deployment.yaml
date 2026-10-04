@@ -70,7 +70,7 @@ spec:
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "service.name={{ .name }},k8s.namespace.name={{ $.Release.Namespace }},k8s.cluster.name=my-prod-cluster"
 
-          {{- if default true .isWebApi }}
+          {{- if .isWebApi }}
           startupProbe:
             httpGet:
               path: /api/actuator/health/liveness
