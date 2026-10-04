@@ -24,7 +24,7 @@ autoscalingDefaults:
 microservices:
   orders:
     name: ms-orders
-    port: 8080
+    port: 9091
     tag: b4c36e15ae2b7af17e3acf9646d8b784f480ed40
     path: /orders
     resources:
