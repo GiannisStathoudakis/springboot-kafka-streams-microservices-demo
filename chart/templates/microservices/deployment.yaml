@@ -55,6 +55,8 @@ spec:
               value: "{{ .name }}"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: "http://alloy.argocd.svc.cluster.local:4317"
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "grpc"
             - name: OTEL_TRACES_EXPORTER
               value: "otlp"
             - name: OTEL_METRICS_EXPORTER
