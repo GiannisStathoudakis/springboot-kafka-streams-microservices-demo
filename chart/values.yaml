@@ -32,8 +32,8 @@ microservices:
         cpuMilli: 100
         memoryMb: 256
       limits:
-        cpuMilli: 500
-        memoryMb: 512 
+        cpuMilli: 1000
+        memoryMb: 1024 
     autoscaling:
       enabled: true
       minReplicas: 1
@@ -50,8 +50,8 @@ microservices:
         cpuMilli: 100
         memoryMb: 256
       limits:
-        cpuMilli: 500
-        memoryMb: 512
+        cpuMilli: 1000
+        memoryMb: 1024 
     autoscaling:
       enabled: true
       minReplicas: 2
@@ -68,8 +68,8 @@ microservices:
         cpuMilli: 100
         memoryMb: 256
       limits:
-        cpuMilli: 500
-        memoryMb: 512
+        cpuMilli: 1000
+        memoryMb: 1024 
     autoscaling:
       enabled: true
       minReplicas: 2

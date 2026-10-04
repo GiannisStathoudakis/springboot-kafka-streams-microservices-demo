@@ -46,9 +46,9 @@ spec:
                 secretKeyRef:
                   name: {{ .name }}-db-secret
                   key: MYSQL_PASSWORD
-            # Dynamic JVM Memory Management (80% Heap, 20% Off-Heap Buffer)
+            # Dynamic JVM Memory Management (70% Heap, 20% Off-Heap Buffer)
             - name: JAVA_TOOL_OPTIONS
-              value: "-Xms{{ div (mul .resources.requests.memoryMb 80) 100 }}m -Xmx{{ div (mul .resources.limits.memoryMb 80) 100 }}m"
+              value: "-Xms{{ div (mul .resources.requests.memoryMb 70) 100 }}m -Xmx{{ div (mul .resources.limits.memoryMb 70) 100 }}m"
 
             # Alloy settigns
             - name: OTEL_SERVICE_NAME
