@@ -25,7 +25,7 @@ microservices:
   orders:
     name: ms-orders
     port: 8080
-    tag: "initial-tag"
+    tag: b4c36e15ae2b7af17e3acf9646d8b784f480ed40
     path: /orders
     resources:
       requests:
@@ -43,7 +43,7 @@ microservices:
   payment:
     name: ms-payment
     port: 8080
-    tag: "initial-tag"
+    tag: b4c36e15ae2b7af17e3acf9646d8b784f480ed40
     path: /payment
     resources:
       requests:
@@ -61,7 +61,7 @@ microservices:
   stock:
     name: ms-stock
     port: 8080
-    tag: "initial-tag"
+    tag: b4c36e15ae2b7af17e3acf9646d8b784f480ed40
     path: /stock
     resources:
       requests:
