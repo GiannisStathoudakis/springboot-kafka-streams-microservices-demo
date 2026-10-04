@@ -52,7 +52,7 @@ spec:
 
             # Alloy settigns
             - name: OTEL_SERVICE_NAME
-              value: "{{ .Values.name }}"
+              value: "{{ .name }}"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: "http://alloy.argocd.svc.cluster.local:4317"
             - name: OTEL_TRACES_EXPORTER
@@ -66,7 +66,7 @@ spec:
             - name: GRAFANA_OTEL_PROFILER_ENDPOINT
               value: "http://pyroscope-distributor.pyroscope.svc.cluster.local:4040"
             - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "service.name={{ .Values.name }},k8s.namespace.name={{ $.Release.Namespace }},k8s.cluster.name=my-prod-cluster"
+              value: "service.name={{ .name }},k8s.namespace.name={{ $.Release.Namespace }},k8s.cluster.name=my-prod-cluster"
 
           livenessProbe:
             httpGet:
