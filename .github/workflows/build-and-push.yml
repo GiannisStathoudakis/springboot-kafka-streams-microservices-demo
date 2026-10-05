@@ -83,6 +83,9 @@ jobs:
       - name: Download Grafana OTel Agent
         run: wget -O ./${{ matrix.service }}/grafana-opentelemetry-java.jar https://github.com/grafana/grafana-opentelemetry-java/releases/download/v2.31.1/grafana-opentelemetry-java.jar
 
+      - name: Download Pyroscope Agent
+        run: wget -O ./${{ matrix.service }}/pyroscope.jar https://github.com/grafana/pyroscope-java/releases/download/v2.9.2/pyroscope.jar
+
       - name: Build Docker Image
         uses: docker/build-push-action@v7
         with:
