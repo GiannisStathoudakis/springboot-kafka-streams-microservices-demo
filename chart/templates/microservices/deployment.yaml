@@ -60,15 +60,13 @@ spec:
             - name: OTEL_TRACES_EXPORTER
               value: "otlp"
             - name: OTEL_METRICS_EXPORTER
-              value: "none"
+              value: "otlp"  
             - name: OTEL_LOGS_EXPORTER
               value: "none"
-            - name: PYROSCOPE_SERVER_ADDRESS
+            - name: GRAFANA_OTEL_PROFILER_ENABLED
+              value: "true"
+            - name: GRAFANA_OTEL_PROFILER_ENDPOINT
               value: "http://pyroscope-distributor.pyroscope.svc.cluster.local:4040"
-            - name: PYROSCOPE_APPLICATION_NAME
-              value: "{{ .name }}"
-            - name: PYROSCOPE_FORMAT
-              value: "jfr"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "service.name={{ .name }},k8s.namespace.name={{ $.Release.Namespace }},k8s.cluster.name=my-prod-cluster"
 
