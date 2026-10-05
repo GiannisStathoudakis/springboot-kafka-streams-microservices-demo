@@ -58,7 +58,7 @@ logging:
     com.tribune.demo.ecommerce: DEBUG
     org.springframework.kafka: INFO
   pattern:
-    console: "%clr(%d{HH:mm:ss.SSS}){blue} %clr(%-5level){magenta} %clr(---){faint} %clr([%15.15t]){yellow} %clr(%logger{36}){cyan} %clr(:){red} %clr(%m){faint}%n%ex"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){blue} %clr(%-5level){magenta} %clr(---){faint} %clr([%15.15t]){yellow} %clr(%logger{36}){cyan} %clr(:){red} %clr(%m){faint}%n%ex"
 
 server:
   port: 9092
