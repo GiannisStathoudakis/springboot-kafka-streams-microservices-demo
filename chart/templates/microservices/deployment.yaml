@@ -69,6 +69,10 @@ spec:
               value: "{{ .name }}"
             - name: PYROSCOPE_FORMAT
               value: "jfr"
+            - name: PYROSCOPE_PROFILER_ALLOC
+              value: "512k"
+            - name: PYROSCOPE_ALLOC_LIVE
+              value: "true"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "service.name={{ .name }},k8s.namespace.name={{ $.Release.Namespace }},k8s.cluster.name=my-prod-cluster"
 
