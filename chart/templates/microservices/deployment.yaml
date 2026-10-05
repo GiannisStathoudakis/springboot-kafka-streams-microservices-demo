@@ -48,7 +48,7 @@ spec:
                   key: MYSQL_PASSWORD
             # Dynamic JVM Memory Management (70% Heap, 20% Off-Heap Buffer)
             - name: JAVA_TOOL_OPTIONS
-              value: "-Xms{{ div (mul .resources.requests.memoryMb 70) 100 }}m -Xmx{{ div (mul .resources.limits.memoryMb 70) 100 }}m"
+              value: "-javaagent:./grafana-opentelemetry-java.jar -javaagent:./pyroscope.jar -Xms{{ div (mul .resources.requests.memoryMb 70) 100 }}m -Xmx{{ div (mul .resources.limits.memoryMb 70) 100 }}m"
 
             # Alloy settigns
             - name: OTEL_SERVICE_NAME
@@ -60,13 +60,15 @@ spec:
             - name: OTEL_TRACES_EXPORTER
               value: "otlp"
             - name: OTEL_METRICS_EXPORTER
-              value: "otlp"  
+              value: "none"
             - name: OTEL_LOGS_EXPORTER
               value: "none"
-            - name: GRAFANA_OTEL_PROFILER_ENABLED
-              value: "true"
-            - name: GRAFANA_OTEL_PROFILER_ENDPOINT
+            - name: PYROSCOPE_SERVER_ADDRESS
               value: "http://pyroscope-distributor.pyroscope.svc.cluster.local:4040"
+            - name: PYROSCOPE_APPLICATION_NAME
+              value: "{{ .name }}"
+            - name: PYROSCOPE_FORMAT
+              value: "jfr"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "service.name={{ .name }},k8s.namespace.name={{ $.Release.Namespace }},k8s.cluster.name=my-prod-cluster"
 
