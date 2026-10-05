@@ -3,4 +3,4 @@ WORKDIR /app
 COPY target/*.jar app.jar
 COPY grafana-opentelemetry-java.jar agent.jar
 EXPOSE 9091
-ENTRYPOINT ["java", "-javaagent:/app/agent.jar", "-javaagent:./pyroscope.jar", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-javaagent:/app/agent.jar", "-javaagent:/app/pyroscope.jar", "-jar", "/app/app.jar"]
