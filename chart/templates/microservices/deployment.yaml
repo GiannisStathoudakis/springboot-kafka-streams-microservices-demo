@@ -62,7 +62,7 @@ spec:
             - name: OTEL_METRICS_EXPORTER
               value: "otlp"
             - name: OTEL_LOGS_EXPORTER
-              value: "none"
+              value: "otlp"
             - name: PYROSCOPE_SERVER_ADDRESS
               value: "http://pyroscope.pyroscope.svc.cluster.local:4040"
             - name: PYROSCOPE_APPLICATION_NAME
