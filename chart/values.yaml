@@ -39,14 +39,12 @@ microservices:
       enabled: true
       minReplicas: 1
       maxReplicas: 5
-      targetPercentage: 75
 
   payment:
     name: ms-payment
     port: 8080
     isWebApi: false
     tag: 56638b0d7fcf8cd22048cae1a58c234ea0155195
-    #path: /payment
     resources:
       requests:
         cpuMilli: 100
@@ -58,14 +56,12 @@ microservices:
       enabled: true
       minReplicas: 2
       maxReplicas: 10
-      targetPercentage: 75
 
   stock:
     name: ms-stock
     port: 8080
     isWebApi: false
     tag: 56638b0d7fcf8cd22048cae1a58c234ea0155195
-    #path: /stock
     resources:
       requests:
         cpuMilli: 100
@@ -77,4 +73,3 @@ microservices:
       enabled: true
       minReplicas: 2
       maxReplicas: 10
-      targetPercentage: 75
