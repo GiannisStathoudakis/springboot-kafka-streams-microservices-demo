@@ -7,6 +7,8 @@ metadata:
   namespace: {{ $.Release.Namespace }}
   labels:
     app: {{ .name }}
+  annotations:
+    reloader.stakater.com/auto: "true"
 spec:
   replicas: 1
   selector:
@@ -22,10 +24,26 @@ spec:
         runAsNonRoot: {{ $.Values.security.runAsNonRoot }}
         runAsUser: {{ $.Values.security.runAsUser }}
         runAsGroup: {{ $.Values.security.runAsGroup }}
+      initContainers:
+        - name: init-agents
+          image: curlimages/curl:latest
+          command: ['sh', '-c']
+          args:
+            - curl -sL -o /agents/agent.jar https://github.com/grafana/grafana-opentelemetry-java/releases/download/v2.31.1/grafana-opentelemetry-java.jar && curl -sL -o /agents/pyroscope.jar https://github.com/grafana/pyroscope-java/releases/download/v2.9.2/pyroscope.jar
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 3000
+          volumeMounts:
+            - name: agents-volume
+              mountPath: /agents
+
       containers:
         - name: {{ .name }}
           image: "{{ $.Values.image.registry }}/{{ .name }}:{{ .tag }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          volumeMounts:
+            - name: agents-volume
+              mountPath: /agents
           ports:
             - containerPort: {{ .port }}
           env:
@@ -48,7 +66,7 @@ spec:
                   key: MYSQL_PASSWORD
             # Dynamic JVM Memory Management (70% Heap, 20% Off-Heap Buffer)
             - name: JAVA_TOOL_OPTIONS
-              value: "-Xms{{ div (mul .resources.requests.memoryMb 70) 100 }}m -Xmx{{ div (mul .resources.limits.memoryMb 70) 100 }}m"
+              value: "-javaagent:/agents/agent.jar -javaagent:/agents/pyroscope.jar -Xms{{ div (mul .resources.requests.memoryMb 70) 100 }}m -Xmx{{ div (mul .resources.limits.memoryMb 70) 100 }}m"
 
             # Alloy settigns
             - name: OTEL_SERVICE_NAME
@@ -110,4 +128,7 @@ spec:
             limits:
               cpu: "{{ .resources.limits.cpuMilli }}m"
               memory: "{{ .resources.limits.memoryMb }}Mi"
+      volumes:
+        - name: agents-volume
+          emptyDir: {}
 {{- end }}
