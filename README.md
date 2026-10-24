@@ -17,9 +17,10 @@
 
 <br/>
 
-> **Platform Engineering & Cloud-Native Infrastructure Showcase**
+> ### Platform Engineering & Cloud-Native Infrastructure Showcase
+>
 > *Note: This fork transforms the original application into a production-ready, Kubernetes-native architecture. The original `docker-compose` setup was completely replaced with a comprehensive modern cloud-native infrastructure stack.*
-> 
+>
 > **Key Infrastructure Architecture Built For This Fork:**
 > - **Helm & Kubernetes-Native:** Designed and implemented Helm charts from scratch for all microservices. Introduced KEDA for dynamic autoscaling based on P95 latency triggers (via Mimir) and Gateway API (Envoy) routing.
 > - **Distroless & Zero-Touch Observability:** Containerized apps using `gcr.io/distroless/java17-debian12:nonroot`. Introduced Grafana OpenTelemetry and Pyroscope for deep tracing and profiling—completely decoupled from the application code and dynamically injected at runtime via Kubernetes `initContainers` and shared `emptyDir` volumes.
