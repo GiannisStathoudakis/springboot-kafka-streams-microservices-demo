@@ -15,6 +15,17 @@
 
 </div>
 
+<br/>
+
+> **Platform Engineering & Cloud-Native Infrastructure Showcase**
+> *Note: This fork transforms the original application into a production-ready, Kubernetes-native architecture. The original `docker-compose` setup has been deprecated in favor of modern cloud-native infrastructure practices.*
+> 
+> **Key Infrastructure Enhancements:**
+> - **Helm & Kubernetes-Native:** Fully packaged microservices using Helm. Includes KEDA for dynamic autoscaling based on P95 latency triggers (via Mimir/Alloy) and Gateway API (Envoy) routing.
+> - **Distroless & Agent Injection:** Migrated to `gcr.io/distroless/java17-debian12:nonroot`. Grafana OpenTelemetry and Pyroscope agents are completely decoupled from the build process and dynamically injected at runtime via Kubernetes `initContainers` and shared `emptyDir` volumes.
+> - **Zero-Trust Security:** Implemented real-time dynamic database credential rotation (1h TTL with `DROP USER`) using HashiCorp Vault and External Secrets Operator (ESO). Enforced defense-in-depth with Cilium eBPF Tetragon policies and Kyverno.
+> - **Advanced CI/CD (GitHub Actions):** Engineered a highly optimized matrix pipeline with GitLeaks, Semgrep SAST, and Trivy image scanning. Eliminated redundant Maven builds by sharing compiled internal dependencies (`commons`) across runners using native artifact caching.
+
 ---
 
 ## Overview
