@@ -32,11 +32,20 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      # NOTE: Tests are skipped here to accelerate local lab deployments.
+      # In a production CI/CD pipeline, -DskipTests MUST be removed to enforce quality gates.
       - name: Build Commons Module
-        run: mvn clean install -pl commons -DskipTests
+        run: mvn clean install -pl commons -am -DskipTests
+
+      - name: Pass internal dependencies to Matrix
+        uses: actions/upload-artifact@v7
+        with:
+          name: shared-maven-repo
+          path: ~/.m2/repository/com/tribune/demo/
+          retention-days: 1
 
   # -------------------------------------------------------------
-  # 2. MATRIX BUILD FOR MICROSERVICES
+  # MATRIX BUILD FOR MICROSERVICES
   # -------------------------------------------------------------
   build-and-push:
     needs: build-commons
@@ -87,6 +96,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
+
+      - name: Download internal dependencies from Job 1
+        uses: actions/download-artifact@v8
+        with:
+          name: shared-maven-repo
+          path: ~/.m2/repository/com/tribune/demo/
 
       # NOTE: Tests are skipped here to accelerate local lab deployments.
       # In a production CI/CD pipeline, -DskipTests MUST be removed to enforce quality gates.
