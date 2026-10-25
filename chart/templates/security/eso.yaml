@@ -1,3 +1,6 @@
+# NOTE: ExternalSecrets + Reloader bridge dynamic Vault credentials to 3rd-party apps without code changes.
+# Production: Handled transparently in-code via native datasource rotation.
+
 {{- range .Values.microservices }}
 ---
 apiVersion: external-secrets.io/v1
