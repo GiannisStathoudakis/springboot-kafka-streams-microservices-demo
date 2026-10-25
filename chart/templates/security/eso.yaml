@@ -6,7 +6,7 @@ metadata:
   name: {{ .name }}-db-credentials
   namespace: {{ $.Release.Namespace }}
 spec:
-  refreshInterval: "1h"
+  refreshInterval: "12h"
   secretStoreRef:
     name: vault-db-backend
     kind: ClusterSecretStore
