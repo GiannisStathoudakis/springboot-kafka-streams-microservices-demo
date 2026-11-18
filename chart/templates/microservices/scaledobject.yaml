@@ -29,7 +29,7 @@ spec:
 
   triggers:
   # ===================================================================
-  # Latency (P95 Duration) Trigger (Request Rate via eBPF / Beyla & Mimir)
+  # Latency (P95 Duration)
   # ===================================================================
   - type: prometheus
     metadata:
