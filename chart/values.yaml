@@ -1,13 +1,13 @@
 domain: production.kublab.org
 image:
   registry: ghcr.io/giannisstathoudakis
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 security:
   runAsNonRoot: true
   runAsUser: 1000
   runAsGroup: 3000
-  readOnlyRootFilesystem: false
+  readOnlyRootFilesystem: true
 
 mysql:
   host: mysql.mysql.svc.cluster.local

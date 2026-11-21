@@ -10,7 +10,9 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
+  {{- if not .autoscaling.enabled }}
   replicas: 1
+  {{- end }}
   selector:
     matchLabels:
       app: {{ .name }}
@@ -24,10 +26,18 @@ spec:
         runAsNonRoot: {{ $.Values.security.runAsNonRoot }}
         runAsUser: {{ $.Values.security.runAsUser }}
         runAsGroup: {{ $.Values.security.runAsGroup }}
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: {{ .name }}
           image: "{{ $.Values.image.registry }}/{{ .name }}:{{ .tag }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: {{ $.Values.security.readOnlyRootFilesystem }}
+            capabilities:
+              drop:
+                - ALL
           ports:
             - containerPort: {{ .port }}
           env:
@@ -112,4 +122,11 @@ spec:
             limits:
               cpu: "{{ .resources.limits.cpuMilli }}m"
               memory: "{{ .resources.limits.memoryMb }}Mi"
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 128Mi
 {{- end }}
